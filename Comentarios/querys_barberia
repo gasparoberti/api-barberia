@@ -1,0 +1,112 @@
+
+paso 1: crear las tablas.
+paso 2: insertar contenido a las tablas principales (sucursal, personal, servicio).
+paso 3: insertar contenido en las tablas relacionales (sucursal_servicio, sucursal_personal).
+
+paso 4: crear todos los turnos, para las respectivas sucursales, según el servicio específico. esto se hace dividiendo la cantidad total de horas que esta abierta la sucursal dividido el tiempo de duración que tiene el servicio. los turnos se deben volver a crear cada vez que se agrega o modifica una sucursal o un servicio.
+se puede usar una tabla temporal.....
+
+
+
+  --obtengo la cantidad de turnos que tiene un local en un dia PARA UN SERVICIO.
+  select (datediff(minute, '10:00:00', '20:00:00'))/60	--turnos de una hora	-> me da 10 turnos y esta bien
+  select (datediff(minute, '10:00:00', '20:00:00'))/30	--turnos de media hora	-> me da 20 turnos y esta bien
+
+
+
+  --me da todos los turnos que tiene el barbero 2 para una fecha espec. 
+  select b.nombre, s.nombre, convert(time(0), t.fecha, 108) from Barbero b	--la hora se muestra asi 12:00:00
+  inner join Turno t on t.barbero_id = b.barbero_id
+  inner join Servicio s on t.servicio_id = s.servicio_id
+  where b.barbero_id = 2
+  and convert(date, t.fecha) = '2021-03-12'		--esta fecha es el parametro que viene del calendar de android
+  
+  
+--nombre	nombre	(No column name)
+--Romina	Depilacion	12:00:00
+  
+  
+  
+  --query para no listar las horas que ya tienen turno. pero esto solo funciona para los turnos que son de servicios que tienen la misma duracion porque coincide el horario de inicio. PERO si yo solo uso esta validacion entonces no andará del todo bien ya que si el barbero tiene un turno que justo empieza en un horario en.........SOLUCIONADO
+
+	-si tengo fracciones de 30 minutos funciona para turnos de servicios que duran 30 y 60.
+	-si tengo fracciones de 60 minutos no funciona porque, un turno a las 13.30 se pisaría con el de las 13.00, ya que si empieza a las 13 y dura una hora va a terminar a las 14 pero a las 13.30 tiene otro turno y no podrá atender a los dos a la vez. SOLUCIONADO. se verifica que no exista un turno media hora mas adelante. código abajo
+	
+  
+			DECLARE @myTableVariable2 TABLE (horario time(0))
+			insert into @myTableVariable2 values('18:00:00'), ('11:00:00'), ('13:30:00')	--esto representa el query con los turnos del barbero (comentado)
+			
+			--select convert(time(0), t.fecha, 108) from Barbero b	--la hora se muestra asi 12:00:00
+			--inner join Turno t on t.barbero_id = b.barbero_id
+			--inner join Servicio s on t.servicio_id = s.servicio_id
+			--where b.barbero_id = 2
+			--and convert(date, t.fecha) = '2021-03-12'		--esta fecha es el parametro que viene del calendar de android
+
+			DECLARE @Counter INT,  @Time time(0), @Fraccion int
+
+			set @Fraccion= 30	--aca va la duracion del servicio
+			SET @Counter= (select (datediff(minute, '10:00:00', '20:00:00'))/@Fraccion)
+			set @Time='10:00:00'		--aca va la hora inicial
+
+			WHILE ( @Counter <> 0)
+			BEGIN
+
+				DECLARE @myTableVariable TABLE (horario time(0))
+				if @Fraccion = 60
+					begin
+						IF NOT EXISTS (SELECT horario FROM @myTableVariable2 where horario = @Time)		--para fracciones de 30
+						and NOT EXISTS (SELECT horario FROM @myTableVariable2 where horario = DATEADD(minute,30,@Time))	--para fracciones de 60 y 30
+						BEGIN
+							insert into @myTableVariable values(@Time)
+						END
+					end
+				else 
+					begin
+						if @Fraccion = 30
+						begin
+							IF NOT EXISTS (SELECT horario FROM @myTableVariable2 where horario = @Time)	--para fracciones de 30
+							BEGIN
+								insert into @myTableVariable values(@Time)
+							END	
+						end
+					end
+				
+				set @Time = DATEADD(minute,@Fraccion,@Time)
+				SET @Counter  = @Counter - 1
+				
+			END
+
+			select horario from @myTableVariable
+			
+			
+			
+			
+
+
+creo el der del problema.
+
+creo la bd con las relaciones.
+
+creo el proyecto web dotnetcore usando netcore 5. 
+
+verifico si la version de ef es la misma que tienen los paquetes que voy a instalar en el paso siguiente (tools, sqlserver, etc.) con el comando dotnet ef. si está desactualizada la actualizo en el powershel con el siguiente comando: dotnet tool update --global dotnet-ef 		(esto se instala globalmente)
+
+
+instalo: a traves del administrador de paquetes: EntityFrameworkCore.Tools, EntityFrameworkCore.SqlServer, EntityFrameworkCore.Design
+
+creo las carpetas Data y Models para usar en el scaffold
+
+recompilar
+
+agrego el string de conexion en el appsetting.json:
+"ConnectionStrings": {
+    "DefaultConnection": "Server=DESKTOP-C8449RA\\SQLEXPRESS;Database=barberia_bm; Trusted_Connection=True;"
+  },
+
+
+creo los modelos en el powershel usando como nombre de string de conexion el que configuré en el paso anterior (-d les agrega a los modelos data anotations).
+dotnet ef dbcontext scaffold Name=ConnectionStrings:DefaultConnection Microsoft.EntityFrameworkCore.SqlServer --context-dir Data --output-dir Models -d
+	
+
+
+
