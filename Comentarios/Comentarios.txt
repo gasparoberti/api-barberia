@@ -16,12 +16,31 @@ recompilar
 
 agrego el string de conexion en el appsetting.json:
 "ConnectionStrings": {
-    "DefaultConnection": "Server=DESKTOP-C8449RA\\SQLEXPRESS;Database=barberia_bm; Trusted_Connection=True;"
+    "Barberia_bm": "Server=DESKTOP-C8449RA\\SQLEXPRESS;Database=barberia_bm; Trusted_Connection=True;"
   },
 
 
 creo los modelos en el powershel usando como nombre de string de conexion el que configuré en el paso anterior (-d les agrega a los modelos data anotations).
-dotnet ef dbcontext scaffold Name=ConnectionStrings:DefaultConnection Microsoft.EntityFrameworkCore.SqlServer --context-dir Data --output-dir Models -d
+dotnet ef dbcontext scaffold Name=Barberia_bm Microsoft.EntityFrameworkCore.SqlServer --context-dir Data --output-dir Models -d
 	
 antes de pushear pero despues de haber hecho el git init debo crear el git ignore con el siguiente comando para que no se guarden cosas innecesarias:
 dotnet new gitignore		una vez creado puedo hacer el add, commit y push.
+
+
+para crear el controlador, antes de usar el scafolding hay que agregar el contexto en el Startup en la función ConfigureServices:
+services.AddDbContext<barberia_bmContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("Barberia_bm")));
+tambien se deben agregar las librerias en el Startup:
+using api_barberia.Data;
+using Microsoft.EntityFrameworkCore;
+
+hacer scafoolding con el modelo y contexto específico.
+
+ejecutar y probar en la interfaz swagger.
+
+
+se agregó el get para turnos para una fecha específica. es igual que el get común pero hay que especificarle el parametro que se pasa en la ruta y el tipo.
+Funciona correctamente. la fecha se puede pasar con o sin la hora. Es indistinto ya que en la consulta que hace en el get compara solo con la fecha y no con 
+la hora. la siguiente consulta anda bien.
+https://localhost:44370/api/Turnos/2021-03-12 

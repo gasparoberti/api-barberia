@@ -30,7 +30,7 @@ namespace api_barberia.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultConnection");
+                optionsBuilder.UseSqlServer("Name=Barberia_bm");
             }
         }
 
