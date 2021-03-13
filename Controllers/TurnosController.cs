@@ -22,10 +22,18 @@ namespace api_barberia.Controllers
         }
 
         // GET: api/Turnos
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<Turno>>> GetTurnos()
+        //{
+        //    return await _context.Turnos.ToListAsync();
+        //}
+
+        // GET: api/Turnos/2021-03-13
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Turno>>> GetTurnos()
+        [Route("{fecha:datetime}")]
+        public async Task<ActionResult<IEnumerable<Turno>>> GetTurnoPorFecha(DateTime fecha)
         {
-            return await _context.Turnos.ToListAsync();
+            return await _context.Turnos.Where(t => t.Fecha.Date == fecha.Date).AsNoTracking().ToListAsync();
         }
 
         // GET: api/Turnos/5

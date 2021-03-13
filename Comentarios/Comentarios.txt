@@ -38,3 +38,9 @@ using Microsoft.EntityFrameworkCore;
 hacer scafoolding con el modelo y contexto específico.
 
 ejecutar y probar en la interfaz swagger.
+
+
+se agregó el get para turnos para una fecha específica. es igual que el get común pero hay que especificarle el parametro que se pasa en la ruta y el tipo.
+Funciona correctamente. la fecha se puede pasar con o sin la hora. Es indistinto ya que en la consulta que hace en el get compara solo con la fecha y no con 
+la hora. la siguiente consulta anda bien.
+https://localhost:44370/api/Turnos/2021-03-12 
