@@ -12,55 +12,47 @@ namespace api_barberia.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TurnosController : ControllerBase
+    public class BarberosController : ControllerBase
     {
         private readonly barberia_bmContext _context;
 
-        public TurnosController(barberia_bmContext context)
+        public BarberosController(barberia_bmContext context)
         {
             _context = context;
         }
 
-        // GET: api/Turnos
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<Turno>>> GetTurnos()
-        //{
-        //    return await _context.Turnos.ToListAsync();
-        //}
-
-        // GET: api/Turnos/2021-03-13
+        // GET: api/Barberos
         [HttpGet]
-        [Route("{fecha:datetime}")]
-        public async Task<ActionResult<IEnumerable<Turno>>> GetTurnoPorFecha(DateTime fecha)
+        public async Task<ActionResult<IEnumerable<Barbero>>> GetBarberos()
         {
-            return await _context.Turnos.Where(t => t.Fecha.Date == fecha.Date).AsNoTracking().ToListAsync();
+            return await _context.Barberos.ToListAsync();
         }
 
-        //// GET: api/Turnos/5
+        //// GET: api/Barberos/5
         //[HttpGet("{id}")]
-        //public async Task<ActionResult<Turno>> GetTurno(int id)
+        //public async Task<ActionResult<Barbero>> GetBarbero(int id)
         //{
-        //    var turno = await _context.Turnos.FindAsync(id);
+        //    var barbero = await _context.Barberos.FindAsync(id);
 
-        //    if (turno == null)
+        //    if (barbero == null)
         //    {
         //        return NotFound();
         //    }
 
-        //    return turno;
+        //    return barbero;
         //}
 
-        //// PUT: api/Turnos/5
+        //// PUT: api/Barberos/5
         //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutTurno(int id, Turno turno)
+        //public async Task<IActionResult> PutBarbero(int id, Barbero barbero)
         //{
-        //    if (id != turno.TurnoId)
+        //    if (id != barbero.BarberoId)
         //    {
         //        return BadRequest();
         //    }
 
-        //    _context.Entry(turno).State = EntityState.Modified;
+        //    _context.Entry(barbero).State = EntityState.Modified;
 
         //    try
         //    {
@@ -68,7 +60,7 @@ namespace api_barberia.Controllers
         //    }
         //    catch (DbUpdateConcurrencyException)
         //    {
-        //        if (!TurnoExists(id))
+        //        if (!BarberoExists(id))
         //        {
         //            return NotFound();
         //        }
@@ -81,36 +73,36 @@ namespace api_barberia.Controllers
         //    return NoContent();
         //}
 
-        //// POST: api/Turnos
+        //// POST: api/Barberos
         //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         //[HttpPost]
-        //public async Task<ActionResult<Turno>> PostTurno(Turno turno)
+        //public async Task<ActionResult<Barbero>> PostBarbero(Barbero barbero)
         //{
-        //    _context.Turnos.Add(turno);
+        //    _context.Barberos.Add(barbero);
         //    await _context.SaveChangesAsync();
 
-        //    return CreatedAtAction("GetTurno", new { id = turno.TurnoId }, turno);
+        //    return CreatedAtAction("GetBarbero", new { id = barbero.BarberoId }, barbero);
         //}
 
-        //// DELETE: api/Turnos/5
+        //// DELETE: api/Barberos/5
         //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteTurno(int id)
+        //public async Task<IActionResult> DeleteBarbero(int id)
         //{
-        //    var turno = await _context.Turnos.FindAsync(id);
-        //    if (turno == null)
+        //    var barbero = await _context.Barberos.FindAsync(id);
+        //    if (barbero == null)
         //    {
         //        return NotFound();
         //    }
 
-        //    _context.Turnos.Remove(turno);
+        //    _context.Barberos.Remove(barbero);
         //    await _context.SaveChangesAsync();
 
         //    return NoContent();
         //}
 
-        //private bool TurnoExists(int id)
+        //private bool BarberoExists(int id)
         //{
-        //    return _context.Turnos.Any(e => e.TurnoId == id);
+        //    return _context.Barberos.Any(e => e.BarberoId == id);
         //}
     }
 }
