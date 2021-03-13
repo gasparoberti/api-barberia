@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Documentos\\Proyectos\\c#\\api_barberia\\api_barberia.csproj": {}
+    "D:\\Documentos\\Proyectos\\c#\\api-barberia\\api_barberia.csproj": {}
   },
   "projects": {
-    "D:\\Documentos\\Proyectos\\c#\\api_barberia\\api_barberia.csproj": {
+    "D:\\Documentos\\Proyectos\\c#\\api-barberia\\api_barberia.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Documentos\\Proyectos\\c#\\api_barberia\\api_barberia.csproj",
+        "projectUniqueName": "D:\\Documentos\\Proyectos\\c#\\api-barberia\\api_barberia.csproj",
         "projectName": "api_barberia",
-        "projectPath": "D:\\Documentos\\Proyectos\\c#\\api_barberia\\api_barberia.csproj",
+        "projectPath": "D:\\Documentos\\Proyectos\\c#\\api-barberia\\api_barberia.csproj",
         "packagesPath": "C:\\Users\\Usuario\\.nuget\\packages\\",
-        "outputPath": "D:\\Documentos\\Proyectos\\c#\\api_barberia\\obj\\",
+        "outputPath": "D:\\Documentos\\Proyectos\\c#\\api-barberia\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
@@ -55,11 +55,19 @@
               "target": "Package",
               "version": "[5.0.4, )"
             },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[5.0.4, )"
+            },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
               "version": "[5.0.4, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[5.0.2, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

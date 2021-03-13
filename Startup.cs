@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using api_barberia.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace api_barberia
 {
     public class Startup
@@ -26,6 +29,9 @@ namespace api_barberia
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<barberia_bmContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("Barberia_bm")));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
