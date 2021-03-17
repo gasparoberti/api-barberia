@@ -1,12 +1,12 @@
 USE [barberia_bm]
 GO
-
+/****** Object:  StoredProcedure [dbo].[GETHorariosBarbero]    Script Date: 17/03/2021 12:20:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE GETHorariosBarbero
+ALTER PROCEDURE [dbo].[GETHorariosBarbero]
 	@p_id_barbero int
 	,@p_fecha_turno datetime
 	,@p_hora_apertura_sucursal time(0)
@@ -22,18 +22,22 @@ BEGIN
 
 	DECLARE @myTableVariable2 TABLE (horario time(0))
 	--insert into @myTableVariable2 values('18:00:00'), ('11:00:00'), ('13:30:00')	--esto representa el query con los turnos del barbero (comentado)
-			
-	select convert(time(0), t.fecha, 108) from Barbero b	--la hora se muestra asi 12:00:00
-	inner join Turno t on t.barbero_id = b.barbero_id
-	inner join Servicio s on t.servicio_id = s.servicio_id
-	where b.barbero_id = @p_id_barbero
-	and convert(date, t.fecha) = @p_fecha_turno		--esta fecha es el parametro que viene del calendar de android
+	
+	insert into @myTableVariable2 (horario) (select convert(time(0), t.fecha, 108) from Barbero b	--la hora se muestra asi 12:00:00
+		inner join Turno t on t.barbero_id = b.barbero_id
+		inner join Servicio s on t.servicio_id = s.servicio_id
+		where b.barbero_id = @p_id_barbero
+		and convert(date, t.fecha) = @p_fecha_turno)		--esta fecha es el parametro que viene del calendar de android
 
 	DECLARE @Counter INT,  @Time time(0), @Fraccion int
 
 	set @Fraccion= @p_duracion_servicio	--aca va la duracion del servicio
 	SET @Counter= (select (datediff(minute, @p_hora_apertura_sucursal, @p_hora_cierre_sucursal))/@Fraccion)
 	set @Time= @p_hora_apertura_sucursal		--aca va la hora inicial
+
+	--select (datediff(minute, '10:00', '20:00'))/30
+
+	--select @Counter, @Fraccion
 
 	WHILE ( @Counter <> 0)
 	BEGIN
@@ -65,4 +69,21 @@ BEGIN
 
 	select horario from @myTableVariable
 END
-GO
+
+
+--prueba
+--USE [barberia_bm]
+--GO
+
+--DECLARE	@return_value int
+
+--EXEC	@return_value = [dbo].[GETHorariosBarbero]
+--		@p_id_barbero = 2,
+--		@p_fecha_turno = '2021-03-13',
+--		@p_hora_apertura_sucursal = '10:00',
+--		@p_hora_cierre_sucursal = '20:00',
+--		@p_duracion_servicio = 60
+
+--SELECT	'Return Value' = @return_value
+
+--
